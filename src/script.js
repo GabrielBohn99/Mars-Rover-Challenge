@@ -1,32 +1,94 @@
 // Rover Object Goes Here
 
-let Rover = {
-  direction: "N",
+let Rover1 = {
+  direction: "E",
   x: 5,
   y: 0,
   travelLog: [] //travelLog starts with Rover.x and Rover.y
 };
 
+let Rover2 = {
+  direction: "E",
+  x: 6,
+  y: 0,
+  travelLog: [] //travelLog starts with Rover.x and Rover.y
+};
 // ============BOARD with OBSTACLES==========
 
-//'-' represents an obstacle
+//'1' represents an obstacle
 
-let board = [
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', '-', ' ', ' ', ' ', '-', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+let map = [
+  ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+  ['0', '1', '0', '0', '0', '0', '0', '0', '0', '0'],
+  ['0', '0', '0', '0', '0', '0', '0', '0', '1', '0'],
+  ['0', '0', '0', '0', '1', '0', '0', '0', '0', '0'],
+  ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+  ['0', '0', '0', '0', '0', '0', '0', '1', '0', '0'],
+  ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+  ['0', '1', '0', '0', '0', '1', '0', '0', '0', '0'],
+  ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+  ['0', '0', '0', '0', '0', '0', '0', '0', '1', '0'],
 ];
 
-
+//console.log(`You will crash into an obstacle by doing this.`);
 
 // ======================
+function checkRoverF(rover1, rover2) {
+  if (rover1.direction === 'E' && rover2.x === rover1.x+1 && rover1.y===rover2.y) {
+    return true;
+  } else if (rover1.direction === 'W' && rover2.x === rover1.x-1 && rover1.y===rover2.y) {
+    return true;
+  } else if (rover1.direction === 'N' && rover2.y === rover1.y-1 && rover1.x===rover2.x) {
+    return true;
+  } else if (rover1.direction === 'S' && rover2.y === rover1.y+1 && rover1.x===rover2.x) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function checkRoverB(rover1, rover2) {
+  if (rover1.direction === 'E' && rover2.x === rover1.x-1 && rover1.y===rover2.y) {
+    return true;
+  } else if (rover1.direction === 'W' && rover2.x === rover1.x+1 && rover1.y===rover2.y) {
+    return true;
+  } else if (rover1.direction === 'N' && rover2.y === rover1.y+1 && rover1.x===rover2.x) {
+    return true;
+  } else if (rover1.direction === 'S' && rover2.y === rover1.y-1 && rover1.x===rover2.x) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function checkPositionF (rover, board) {
+  if ('1' === board[rover.x+1][rover.y] && rover.direction == "E") {
+    return true;
+  } else if ('1' === board[rover.x-1][rover.y] && rover.direction == "W") {
+    return true;
+  } else if ('1' === board[rover.x][rover.y+1] && rover.direction == "S") {
+    return true;
+  } else if ('1' === board[rover.x][rover.y-1] && rover.direction == "N") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function checkPositionB (rover, board) {
+  if ('1' === board[rover.x-1][rover.y] && rover.direction == "E") {
+    return true;
+  } else if ('1' === board[rover.x+1][rover.y] && rover.direction == "W") {
+    return true;
+  } else if ('1' === board[rover.x][rover.y-1] && rover.direction == "S") {
+    return true;
+  } else if ('1' === board[rover.x][rover.y+1] && rover.direction == "N") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function turnLeft(rover){
  console.log("turnLeft was called!");
   switch (rover.direction) {
@@ -65,101 +127,114 @@ function turnRight(rover){
   console.log(`The rover is now facing ${rover.direction}`);
 }
 
-function moveForward(rover){
-  if (rover.x == 0 && rover.direction == "N" || rover.y > 9) {
+function moveForward(rover1, board, rover2){
+  if (checkPositionF(rover1,board)) {
+    console.log(`You will crash into an obstacle by doing this.`);
+  } else if (checkRoverF(rover1, rover2)) {
+    console.log(`You will crash into another rover.`);
+  } else if (rover1.y == 0 && rover1.direction == "N" ) {
     console.log("You can't place the rover outside of the safe area!");
-  } else if (rover.y == 9 && rover.direction == "S") {
+  } else if (rover1.y == 9 && rover1.direction == "S") {
     console.log("You can't place the rover outside of the safe area!");
-  } else if (rover.x == 9 && rover.direction == "E") {
+  } else if (rover1.x == 9 && rover1.direction == "E") {
     console.log("You can't place the rover outside of the safe area!");
-  } else if (rover.x == 0 && rover.direction == "W" || rover.x > 9) {
+  } else if (rover1.x == 0 && rover1.direction == "W") {
     console.log("You can't place the rover outside of the safe area!");
+  } else if (rover1.x > 9 || rover1.x < 0 || rover1.y > 9 || rover1.x < 0) {
+    console.log("You can't place the rover outside of the safe area!")
   } else {
     console.log("moveForward was called");   
-      switch (rover.direction) {
+    switch (rover1.direction) {
     case "W": 
-      rover.x -= 1;
-      console.log(`Command center the rover has position: x=${rover.x}, y=${rover.y}`);
+      rover1.x -= 1;
+      console.log(`Command center the rover has position: x=${rover1.x}, y=${rover1.y}`);
       break;
     case "N":
-      rover.y -= 1;
-      console.log(`Command center the rover has position: x=${rover.x}, y=${rover.y}`);
+      rover1.y -= 1;
+      console.log(`Command center the rover has position: x=${rover1.x}, y=${rover1.y}`);
       break;
     case "S":
-      rover.y += 1;
-      console.log(`Command center the rover has position: x=${rover.x}, y=${rover.y}`);
+      rover1.y += 1;
+      console.log(`Command center the rover has position: x=${rover1.x}, y=${rover1.y}`);
       break;
     case "E":
-      rover.x += 1;
-      console.log(`Command center the rover has position: x=${rover.x}, y=${rover.y}`); 
+      rover1.x += 1;
+      console.log(`Command center the rover has position: x=${rover1.x}, y=${rover1.y}`); 
       break;
       }
-    let newPosition = {x: rover.x, y: rover.y};
-
-    rover.travelLog.push(newPosition);
+    let newPosition = {x: rover1.x, y: rover1.y};
+    rover1.travelLog.push(newPosition);
   }
 }
 
-function moveBackward(rover){
-  if (rover.y == 0 && rover.direction == "S" || rover.y > 9) {
+function moveBackward(rover1, board, rover2){
+  if (checkPositionB(rover1, board)) {
+    console.log(`You will crash into an obstacle by doing this.`);
+  } else if (checkRoverB(rover1, rover2)) {
+    console.log(`You will crash into another rover.`);
+  } else if (rover1.y == 0 && rover1.direction == "S") {
     console.log("You can't place the rover outside of the safe area!");
-  } else if (rover.y == 9 && rover.direction == "N") {
+  } else if (rover1.y == 9 && rover1.direction == "N") {
     console.log("You can't place the rover outside of the safe area!");
-  } else if (rover.x == 9 && rover.direction == "W") {
+  } else if (rover1.x == 9 && rover1.direction == "W") {
     console.log("You can't place the rover outside of the safe area!");
-  } else if (rover.x == 0 && rover.direction == "E" || rover.x > 9) {
+  } else if (rover1.x == 0 && rover1.direction == "E") {
     console.log("You can't place the rover outside of the safe area!");
   } else {
-    console.log("moveBackwars was called");   
-      switch (rover.direction) {
+    console.log("moveBackward was called");   
+      switch (rover1.direction) {
     case "W": 
-      rover.x += 1;
-      console.log(`Command center the rover has position: x=${rover.x}, y=${rover.y}`);
+      rover1.x += 1;
+      console.log(`Command center the rover has position: x=${rover1.x}, y=${rover1.y}`);
       break;
     case "N":
-      rover.y += 1;
-      console.log(`Command center the rover has position: x=${rover.x}, y=${rover.y}`);
+      rover1.y += 1;
+      console.log(`Command center the rover has position: x=${rover1.x}, y=${rover1.y}`);
       break;
     case "S":
-      rover.y -= 1;
-      console.log(`Command center the rover has position: x=${rover.x}, y=${rover.y}`);
+      rover1.y -= 1;
+      console.log(`Command center the rover has position: x=${rover1.x}, y=${rover1.y}`);
       break;
     case "E":
-      rover.x -= 1;
-      console.log(`Command center the rover has position: x=${rover.x}, y=${rover.y}`); 
+      rover1.x -= 1;
+      console.log(`Command center the rover has position: x=${rover1.x}, y=${rover1.y}`); 
       break;
       }
-    let newPosition = {x: rover.x, y: rover.y};
+    let newPosition = {x: rover1.x, y: rover1.y};
 
-    rover.travelLog.push(newPosition);
+    rover1.travelLog.push(newPosition);
   }
 }
 
-function commands(rover, command) {
-    let starterPosition = {x: rover.x, y: rover.y};
+//moveForward (Rover1, map, Rover2);
 
-    rover.travelLog.push(starterPosition);
+//moveBackward (Rover1, map, Rover2);
+
+function commands(rover1, rover2, command, board) {
+    let starterPosition = {x: rover1.x, y: rover1.y};
+
+    rover1.travelLog.push(starterPosition);
   for (let i = 0; i < command.length; i++) {
     let order = command[i];
     switch(order) {
       case "f":
-        moveForward(rover);
+        moveForward(rover1, board, rover2);
         break;
       case "l":
-        turnLeft(rover);
+        turnLeft(rover1);
         break;
       case "r":
-        turnRight(rover);
+        turnRight(rover1);
         break;
       case "b":
-        moveBackward(rover);
+        moveBackward(rover1, board, rover2);
         break;
       default:
         console.log(`Wrong command.`);
         break;
     }
   }
-  console.log(rover.travelLog);
+  console.log(rover1.travelLog);
 }
 
-//commands(Rover, "rffrfflfrffbb");
+//commands(Rover1, Rover2, "rffrfflfrffbb", map);
