@@ -1,21 +1,70 @@
 // Rover Object Goes Here
 
-let Rover1 = {
+let pRover = {
   direction: "E",
   x: 5,
-  y: 0,
+  y: 4,
   travelLog: [] //travelLog starts with Rover.x and Rover.y
 };
 
-let Rover2 = {
+let sRover = {
   direction: "E",
   x: 6,
   y: 0,
   travelLog: [] //travelLog starts with Rover.x and Rover.y
 };
+
+function randomPos(rover) {
+  let positionX, positionY;
+  
+  positionX = Math.round(Math.random()*10);
+  positionY = Math.round(Math.random()*10);
+  
+  if (positionX>10 || positionY > 10) {
+    positionX = Math.round(Math.random()*10);
+    positionY = Math.round(Math.random()*10);
+  } else { 
+  rover.x= positionX;
+  rover.y= positionY;
+  }
+  
+  rover.x= positionX;
+  rover.y= positionY;
+}
+
+function randomDirection(rover) {
+  let h;
+  
+  h = Math.random();
+  
+  if (h < 0.24) {
+    rover.direction = "W";
+  } else if ( h >=0.24 && h < 0.5) {
+    rover.direction = "S";
+  } else if ( h >=0.5 && h < 0.75) {
+    rover.direction = "E";
+  } else {
+    rover.direction = "N";
+  }
+}
+
 // ============BOARD with OBSTACLES==========
 
-//'1' represents an obstacle
+//'1' or 1 represents an obstacle
+let tamanho=10;
+
+let mapa=[];
+
+function createBoard (size, board) {
+  for (let y=0; y<size; y++) {
+    board.push([]);
+    for ( let x=0; x<size; x++){
+      let randomN;
+      randomN = Math.round(Math.random());
+      board[y].push(randomN);
+    }
+  }
+}
 
 let map = [
   ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
@@ -62,13 +111,13 @@ function checkRoverB(rover1, rover2) {
 }
 
 function checkPositionF (rover, board) {
-  if ('1' === board[rover.x+1][rover.y] && rover.direction == "E") {
+  if ('1' === board[rover.x+1][rover.y] || 1 === board[rover.x+1][rover.y] && rover.direction == "E") {
     return true;
-  } else if ('1' === board[rover.x-1][rover.y] && rover.direction == "W") {
+  } else if ('1' === board[rover.x-1][rover.y] || 1 === board[rover.x-1][rover.y] && rover.direction == "W") {
     return true;
-  } else if ('1' === board[rover.x][rover.y+1] && rover.direction == "S") {
+  } else if ('1' === board[rover.x][rover.y+1] || 1 === board[rover.x][rover.y+1] && rover.direction == "S") {
     return true;
-  } else if ('1' === board[rover.x][rover.y-1] && rover.direction == "N") {
+  } else if ('1' === board[rover.x][rover.y-1] || 1 === board[rover.x][rover.y-1] && rover.direction == "N") {
     return true;
   } else {
     return false;
@@ -76,13 +125,13 @@ function checkPositionF (rover, board) {
 }
 
 function checkPositionB (rover, board) {
-  if ('1' === board[rover.x-1][rover.y] && rover.direction == "E") {
+  if ('1' === board[rover.x-1][rover.y] || 1 === board[rover.x-1][rover.y] && rover.direction == "E") {
     return true;
-  } else if ('1' === board[rover.x+1][rover.y] && rover.direction == "W") {
+  } else if ('1' === board[rover.x+1][rover.y] || 1 === board[rover.x+1][rover.y] && rover.direction == "W") {
     return true;
-  } else if ('1' === board[rover.x][rover.y-1] && rover.direction == "S") {
+  } else if ('1' === board[rover.x][rover.y-1] || 1 === board[rover.x][rover.y-1] && rover.direction == "S") {
     return true;
-  } else if ('1' === board[rover.x][rover.y+1] && rover.direction == "N") {
+  } else if ('1' === board[rover.x][rover.y+1] || 1 === board[rover.x][rover.y+1] && rover.direction == "N") {
     return true;
   } else {
     return false;
@@ -210,10 +259,23 @@ function moveBackward(rover1, board, rover2){
 
 //moveBackward (Rover1, map, Rover2);
 
-function commands(rover1, rover2, command, board) {
+function commands(rover1, rover2, command, board, size) {
     let starterPosition = {x: rover1.x, y: rover1.y};
-
+  
     rover1.travelLog.push(starterPosition);
+  
+  createBoard(size,board);
+  
+  console.log(board);
+  
+  randomPos(rover1);
+  randomPos(rover2);
+  randomDirection(rover1);
+  randomDirection(rover2);
+  
+  console.log(rover1);
+  console.log(rover2);
+  
   for (let i = 0; i < command.length; i++) {
     let order = command[i];
     switch(order) {
@@ -237,4 +299,6 @@ function commands(rover1, rover2, command, board) {
   console.log(rover1.travelLog);
 }
 
-//commands(Rover1, Rover2, "rffrfflfrffbb", map);
+//commands(pRover, sRover, "rffrfflfrffbb", map);
+
+//commands(pRover, sRover, "rffrfflfrffbb", mapa, tamanho);
