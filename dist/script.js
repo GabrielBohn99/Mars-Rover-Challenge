@@ -262,8 +262,6 @@ function moveBackward(rover1, board, rover2){
 function commands(rover1, rover2, command, board, size) {
     let starterPosition = {x: rover1.x, y: rover1.y};
   
-    rover1.travelLog.push(starterPosition);
-  
   createBoard(size,board);
   
   console.log(board);
@@ -272,6 +270,8 @@ function commands(rover1, rover2, command, board, size) {
   randomPos(rover2);
   randomDirection(rover1);
   randomDirection(rover2);
+  
+  rover1.travelLog.push(starterPosition);
   
   console.log(rover1);
   console.log(rover2);
